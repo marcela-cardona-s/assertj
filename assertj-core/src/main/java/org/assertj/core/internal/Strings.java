@@ -17,6 +17,7 @@ import static java.lang.Character.isWhitespace;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.Locale.ROOT;
+import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toCollection;
 import static org.assertj.core.error.ShouldBeBase64.shouldBeBase64;
@@ -94,7 +95,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
 import org.assertj.core.api.AssertionInfo;
 import org.assertj.core.util.VisibleForTesting;
 
@@ -676,13 +676,13 @@ public class Strings {
   public void assertIsEqualToNormalizingNewlines(AssertionInfo info, CharSequence actual, CharSequence expected) {
     String actualNormalized = normalizeNewlines(actual);
     String expectedNormalized = normalizeNewlines(expected);
-    if (!actualNormalized.equals(expectedNormalized))
+    if (!java.util.Objects.equals(actualNormalized,expectedNormalized))
       throw failures.failure(info, shouldBeEqualIgnoringNewLineDifferences(actual, expected), actualNormalized,
                              expectedNormalized);
   }
 
   private static String normalizeNewlines(CharSequence actual) {
-    return actual.toString().replace("\r\n", "\n");
+    return nonNull(actual) ? actual.toString().replace("\r\n", "\n") : null;
   }
 
   /**

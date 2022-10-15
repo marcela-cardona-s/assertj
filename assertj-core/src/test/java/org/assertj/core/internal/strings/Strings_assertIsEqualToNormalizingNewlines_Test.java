@@ -56,4 +56,32 @@ class Strings_assertIsEqualToNormalizingNewlines_Test extends StringsBaseTest {
                              "Lord of the Rings\n\nis cool", expected);
   }
 
+  @Test
+  void should_pass_if_actual_and_expected_are_both_null() {
+    String actual = null;
+    String expected = null;
+    assertThat(actual).isEqualToNormalizingNewlines(expected);
+  }
+
+  @Test
+  void should_fail_if_actual_is_null_and_expected_is_not() {
+    String actual = null;
+    String expected = "";
+
+    Throwable error = catchThrowable(() -> strings.assertIsEqualToNormalizingNewlines(someInfo(), actual, expected));
+    assertThat(error).isInstanceOf(AssertionError.class);
+
+    verify(failures).failure(someInfo(), shouldBeEqualIgnoringNewLineDifferences(null, ""), null, expected);
+  }
+
+  @Test
+  void should_fail_if_actual_is_not_null_but_expected_is_null() {
+    String actual = "";
+    String expected = null;
+
+    Throwable error = catchThrowable(() -> strings.assertIsEqualToNormalizingNewlines(someInfo(), actual, expected));
+    assertThat(error).isInstanceOf(AssertionError.class);
+
+    verify(failures).failure(someInfo(), shouldBeEqualIgnoringNewLineDifferences(actual, null), "", null);
+  }
 }
